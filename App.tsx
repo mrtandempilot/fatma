@@ -7,6 +7,7 @@ import { WakeWordDetector } from './utils/wake-word-detector';
 import { gmailService, Email } from './utils/gmail-service';
 import Visualizer from './components/Visualizer';
 import StatusIndicator from './components/StatusIndicator';
+import GmailAuthButton from './components/GmailAuthButton';
 
 const MEMORY_KEY = 'friend_assistant_memories';
 const TASKS_KEY = 'aura_tasks';
@@ -166,6 +167,12 @@ const App: React.FC = () => {
       return updated;
     });
     return "Memory saved successfully.";
+  }, []);
+
+  const handleGmailAuth = useCallback((accessToken: string) => {
+    gmailService.setAccessToken(accessToken);
+    setIsGmailAuthenticated(true);
+    console.log('Gmail authenticated successfully');
   }, []);
 
   const cleanupAudioNodes = useCallback(() => {
@@ -444,9 +451,17 @@ PRIVACY:
           </svg>
         </div>
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Aura: Your Home Friend</h1>
-        <p className="text-gray-500 max-w-md mx-auto">
+        <p className="text-gray-500 max-w-md mx-auto mb-4">
           A personalized voice assistant who remembers your conversations and cares about your day.
         </p>
+
+        {/* Gmail Auth Button */}
+        <div className="flex justify-center mt-4">
+          <GmailAuthButton
+            onSuccess={handleGmailAuth}
+            isAuthenticated={isGmailAuthenticated}
+          />
+        </div>
       </header>
 
       <main className="w-full bg-white rounded-3xl shadow-xl p-8 md:p-12 mb-8 relative overflow-hidden">
