@@ -1,0 +1,7 @@
+{
+  "name": "FriendAtHome Voice Assistant",
+  "description": "A warm, supportive AI voice assistant that acts like a friend at home, remembering your conversations and personal details using the Gemini Live API.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
