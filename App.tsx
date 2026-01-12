@@ -130,6 +130,15 @@ const App: React.FC = () => {
       setDrafts(JSON.parse(savedDrafts));
     }
 
+    // Restore Gmail authentication state
+    const gmailAuth = localStorage.getItem('gmail_authenticated');
+    const gmailToken = localStorage.getItem('gmail_access_token');
+    if (gmailAuth === 'true' && gmailToken) {
+      gmailService.setAccessToken(gmailToken);
+      setIsGmailAuthenticated(true);
+      console.log('Gmail authentication restored from localStorage');
+    }
+
     // Initialize wake word detection if not muted
     if (!isMuted) {
       wakeWordDetectorRef.current = new WakeWordDetector(
@@ -170,9 +179,13 @@ const App: React.FC = () => {
   }, []);
 
   const handleGmailAuth = useCallback((accessToken: string) => {
+    console.log('Gmail auth callback triggered with token:', accessToken.substring(0, 20) + '...');
     gmailService.setAccessToken(accessToken);
     setIsGmailAuthenticated(true);
-    console.log('Gmail authenticated successfully');
+    // Persist authentication state
+    localStorage.setItem('gmail_authenticated', 'true');
+    localStorage.setItem('gmail_access_token', accessToken);
+    console.log('Gmail authenticated successfully, state updated');
   }, []);
 
   const cleanupAudioNodes = useCallback(() => {
